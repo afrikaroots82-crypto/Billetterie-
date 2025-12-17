@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billetterie Waouh</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;font-family:'Montserrat',sans-serif;background:#050916;color:#fff;overflow:hidden}
+
+/* PAGES */
+.page{
+  position:fixed;
+  inset:0;
+  background:#050916;
+  transform:translateX(100%);
+  opacity:0;
+  transition:transform .45s ease, opacity .45s ease;
+  overflow-y:auto;
+}
+.page.active{
+  transform:translateX(0);
+  opacity:1;
+}
+
+/* COMMON */
+button{
+  border:none;
+  border-radius:40px;
+  padding:14px 40px;
+  font-weight:700;
+  background:linear-gradient(135deg,#00d4ff,#00ff7f);
+  color:#041018;
+  cursor:pointer;
+}
+.back{
+  position:fixed;
+  top:15px;
+  left:15px;
+  background:rgba(0,0,0,.6);
+  color:#fff;
+  padding:8px 16px;
+  border-radius:20px;
+  z-index:10;
+}
+.logo{
+  width:130px;
+  display:block;
+  margin:20px auto;
+  filter:drop-shadow(0 0 20px rgba(0,212,255,.7));
+}
+
+/* HOME */
+#home{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:
+    linear-gradient(180deg,rgba(5,9,22,.75),rgba(5,9,22,.95)),
+    url("https://image.noelshack.com/fichiers/2025/51/2/1765900520-w5.jpg") center/cover;
+}
+#home h1{
+  font-family:'Playfair Display',serif;
+  font-size:1.6rem;
+  margin:30px 20px;
+  text-shadow:0 0 25px rgba(0,212,255,.6);
+}
+
+/* CAROUSEL */
+.carousel{
+  width:92%;
+  height:55vh;
+  margin:20px auto;
+  border-radius:30px;
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(0,212,255,.5);
+}
+.carousel-track{
+  display:flex;
+  height:100%;
+  animation:slide 45s infinite ease-in-out;
+}
+.slide{
+  min-width:100%;
+}
+.slide img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  animation:zoom 8s infinite alternate;
+  filter:brightness(.9) contrast(1.1);
+}
+
+@keyframes slide{
+  0%,12%{transform:translateX(0)}
+  16%,28%{transform:translateX(-100%)}
+  32%,44%{transform:translateX(-200%)}
+  48%,60%{transform:translateX(-300%)}
+  64%,76%{transform:translateX(-400%)}
+  80%,92%{transform:translateX(-500%)}
+  100%{transform:translateX(0)}
+}
+@keyframes zoom{
+  from{transform:scale(1)}
+  to{transform:scale(1.15)}
+}
+
+/* SEARCH */
+.search{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  width:85%;
+  margin:20px auto;
+}
+.search input{
+  padding:14px 20px;
+  border-radius:30px;
+  border:none;
+}
+
+/* EVENTS LIST */
+.events{
+  width:92%;
+  margin:auto;
+}
+.event{
+  background:rgba(255,255,255,.06);
+  border-radius:22px;
+  padding:14px;
+  margin-bottom:16px;
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+.event img{
+  width:100px;
+  height:100px;
+  border-radius:18px;
+  object-fit:cover;
+}
+.event h3{font-size:1rem}
+.event p{font-size:.85rem;opacity:.85}
+.event button{
+  padding:10px 18px;
+  font-size:.85rem;
+}
+
+/* PAYMENT */
+#payment h2{
+  margin:20px 0;
+  font-family:'Playfair Display',serif;
+}
+.option{
+  width:85%;
+  margin:12px auto;
+  padding:20px;
+  border-radius:24px;
+  background:rgba(255,255,255,.08);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border:2px solid rgba(0,212,255,.4);
+}
+.option img{
+  width:50px;
+  border-radius:10px;
+}
+.option.active{
+  box-shadow:0 0 30px rgba(0,255,127,.8);
+  border-color:#00ff7f;
+}
+
+/* TICKET */
+#ticket{
+  padding-top:70px;
+  display:flex;
+  justify-content:center;
+}
+.ticket{
+  width:90%;
+  max-width:380px;
+  border-radius:26px;
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(0,212,255,.7);
+}
+.ticket img{width:100%;height:200px;object-fit:cover}
+.ticket-body{
+  padding:18px;
+  text-align:center;
+}
+.ticket.standard{background:linear-gradient(135deg,#1e90ff,#00d4ff)}
+.ticket.vip{background:linear-gradient(135deg,#7b2cff,#e1baff)}
+.ticket.vvip{background:linear-gradient(135deg,#000,#d4af37)}
+.qr{width:140px;margin-top:12px;border-radius:12px;background:#fff;padding:6px}
+</style>
+</head>
+
+<body>
+
+<!-- HOME -->
+<div class="page active" id="home">
+  <img class="logo" src="https://image.noelshack.com/fichiers/2025/51/2/1765900478-screenshot-20251215-214312-2.jpg">
+  <h1>L’expérience billetterie nouvelle génération</h1>
+  <button onclick="go('events')">Découvrir les événements</button>
+</div>
+
+<!-- EVENTS -->
+<div class="page" id="events">
+  <div class="back" onclick="go('home')">Retour</div>
+  <img class="logo" src="https://image.noelshack.com/fichiers/2025/51/2/1765900478-screenshot-20251215-214312-2.jpg">
+
+  <div class="carousel">
+    <div class="carousel-track">
+      <div class="slide"><img src="https://image.noelshack.com/fichiers/2025/51/2/1765922008-himra-en-concert-au-parc-692cdc9041083-1764547767-thumbnail.jpg"></div>
+      <div class="slide"><img src="https://image.noelshack.com/fichiers/2025/51/2/1765922011-dopelym-en-concert-6914c007279ab-1762967607.png"></div>
+      <div class="slide"><img src="https://image.noelshack.com/fichiers/2025/51/2/1765922053-tiakola-tournee-mondiale-2025-1200x900.jpg"></div>
+      <div class="slide"><img src="https://image.noelshack.com/fichiers/2025/51/2/1765922081-fb-img-1765904606079.jpg"></div>
+      <div class="slide"><img src="https://image.noelshack.com/fichiers/2025/51/2/1765922100-fb-img-1765904516222.jpg"></div>
+      <div class="slide"><img src="https://image.noelshack.com/fichiers/2025/51/2/1765922121-fb-img-1765904581887.jpg"></div>
+    </div>
+  </div>
+
+  <div class="search">
+    <input placeholder="Nom de l'événement">
+    <input placeholder="Commune / Ville">
+    <button>Chercher</button>
+  </div>
+
+  <div class="events">
+    <div class="event" onclick="openPay('Sidiki Diabaté','https://image.noelshack.com/fichiers/2025/51/2/1765904640-fb-img-1765904606079.jpg')">
+      <img src="https://image.noelshack.com/fichiers/2025/51/2/1765904640-fb-img-1765904606079.jpg">
+      <div>
+        <h3>Sidiki Diabaté</h3>
+        <p>Concert live exceptionnel</p>
+      </div>
+      <button>Ticket</button>
+    </div>
+
+    <div class="event" onclick="openPay('DJ Kedjevara','https://image.noelshack.com/fichiers/2025/51/3/1765947690-fb-img-1765904516222.jpg')">
+      <img src="https://image.noelshack.com/fichiers/2025/51/3/1765947690-fb-img-1765904516222.jpg">
+      <div>
+        <h3>DJ Kedjevara</h3>
+        <p>Show coupé-décalé</p>
+      </div>
+      <button>Ticket</button>
+    </div>
+
+    <div class="event" onclick="openPay('Sindika','https://image.noelshack.com/fichiers/2025/51/3/1765947753-fb-img-1765904581887.jpg')">
+      <img src="https://image.noelshack.com/fichiers/2025/51/3/1765947753-fb-img-1765904581887.jpg">
+      <div>
+        <h3>Sindika</h3>
+        <p>Ambiance urbaine</p>
+      </div>
+      <button>Ticket</button>
+    </div>
+
+    <div class="event" onclick="openPay('Alex Fox','https://image.noelshack.com/fichiers/2025/51/3/1765947807-fb-img-1765904566251.jpg')">
+      <img src="https://image.noelshack.com/fichiers/2025/51/3/1765947807-fb-img-1765904566251.jpg">
+      <div>
+        <h3>Alex Fox</h3>
+        <p>Show explosif</p>
+      </div>
+      <button>Ticket</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAYMENT -->
+<div class="page" id="payment">
+  <div class="back" onclick="go('events')">Retour</div>
+  <img class="logo" src="https://image.noelshack.com/fichiers/2025/51/2/1765900478-screenshot-20251215-214312-2.jpg">
+
+  <h2>Catégorie</h2>
+  <div class="option" onclick="selectCat('standard',10000)">Standard – 10.000</div>
+  <div class="option" onclick="selectCat('vip',20000)">VIP – 20.000</div>
+  <div class="option" onclick="selectCat('vvip',30000)">VVIP – 30.000</div>
+
+  <h2>Opérateur</h2>
+  <div class="option" onclick="selectOp('Wave')"><span>Wave</span><img src="https://image.noelshack.com/fichiers/2025/51/2/1765920904-fb-img-1765905476103.jpg"></div>
+  <div class="option" onclick="selectOp('MTN')"><span>MTN</span><img src="https://image.noelshack.com/fichiers/2025/51/2/1765920846-fb-img-1765905519725.jpg"></div>
+  <div class="option" onclick="selectOp('Orange')"><span>Orange</span><img src="https://image.noelshack.com/fichiers/2025/51/2/1765920846-fb-img-1765905492935.jpg"></div>
+
+  <button onclick="generateTicket()">Générer le billet</button>
+</div>
+
+<!-- TICKET -->
+<div class="page" id="ticket">
+  <div class="back" onclick="go('events')">Retour</div>
+  <div id="ticketBox"></div>
+</div>
+
+<script>
+let eventName="",eventImg="",cat="",price=0,op="";
+
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function openPay(name,img){
+  eventName=name;
+  eventImg=img;
+  go('payment');
+}
+
+function selectCat(c,p){
+  cat=c;price=p;
+  document.querySelectorAll('#payment .option').forEach(o=>o.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function selectOp(o){
+  op=o;
+  event.target.classList.add('active');
+}
+
+function generateTicket(){
+  const qr=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${eventName}-${cat}-${op}`;
+  document.getElementById('ticketBox').innerHTML=`
+    <div class="ticket ${cat}">
+      <img src="${eventImg}">
+      <div class="ticket-body">
+        <h3>${eventName}</h3>
+        <p>${cat.toUpperCase()} – ${price} FCFA</p>
+        <p>${op}</p>
+        <img class="qr" src="${qr}">
+      </div>
+    </div>`;
+  go('ticket');
+}
+		const nameInput = document.getElementById("searchName");
+const cityInput = document.getElementById("searchCity");
+const events = document.querySelectorAll(".event");
+
+function filterEvents(){
+  const nameValue = nameInput.value.toLowerCase().trim();
+  const cityValue = cityInput.value.toLowerCase().trim();
+
+  events.forEach(event => {
+    const eventName = event.dataset.name;
+    const eventCity = event.dataset.city;
+
+    const matchName = eventName.includes(nameValue);
+    const matchCity = eventCity.includes(cityValue);
+
+    if(matchName && matchCity){
+      event.style.display = "flex";
+      requestAnimationFrame(() => {
+        event.style.opacity = "1";
+        event.style.transform = "scale(1)";
+      });
+    } else {
+      event.style.opacity = "0";
+      event.style.transform = "scale(.95)";
+      setTimeout(() => {
+        event.style.display = "none";
+      }, 200);
+    }
+  });
+}
+
+// écoute en temps réel
+nameInput.addEventListener("input", filterEvents);
+cityInput.addEventListener("input", filterEvents);
+</script>
+
+</body>
+</html>
